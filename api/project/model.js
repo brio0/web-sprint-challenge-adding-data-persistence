@@ -8,8 +8,8 @@ module.exports = {
 }
 
 async function find() {
-    const rows = await db('projects')
-    return rows
+    const result = await db('projects')
+    return result
 }
 
 async function findBy(projectId) {
@@ -20,5 +20,7 @@ async function findBy(projectId) {
 function postProject(project) {
     return db("projects")
         .insert(project)
-        .then(([id]) => findBy(id));
+        .then(([id]) => {
+            return db('projects').where('project_id', id).first()
+        });
 }

@@ -52,7 +52,7 @@ router.post('/', (req, res) => {
     } else {
         Project.postProject({ project_name, project_description, project_completed })
             .then((project) => {
-                res.status(200).json(project)
+                res.status(201).json(project)
             })
             .catch(err => {
                 res.status(500).json({

@@ -23,4 +23,26 @@ router.get('/', (req, res) => {
         })
 })
 
+router.post('/', (req, res) => {
+    const { task_description, task_notes, task_completed, project_id } = req.body
+
+    if (!task_description || !project_id) {
+        res.status(400).json({
+            message: "Please provide task description and project id"
+        })
+    } else {
+        Tasks.postTask({ task_description, task_notes, task_completed, project_id })
+            .then(task => {
+                res.status(201).json(task)
+            })
+            .catch(err => {
+                res.status(500).json({
+                    message: "error posting tasks",
+                    err: err.message,
+                    stack: err.stack
+                })
+            })
+    }
+})
+
 module.exports = router

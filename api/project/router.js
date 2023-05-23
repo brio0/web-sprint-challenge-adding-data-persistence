@@ -6,9 +6,17 @@ const router = express.Router()
 
 router.get('/', (req, res) => {
     Project.find()
-        .then(project => {
-            if (project) {
-                res.status(200).json(project)
+        .then(projects => {
+            console.log(projects)
+
+            if (projects) {
+                const projectsWithBooleans = projects.map((project) => {
+                    return {
+                        ...project,
+                        project_completed: Boolean(project.project_completed)
+                    }
+                })
+                res.status(200).json(projectsWithBooleans)
             } else {
                 return []
             }
@@ -52,7 +60,11 @@ router.post('/', (req, res) => {
     } else {
         Project.postProject({ project_name, project_description, project_completed })
             .then((project) => {
-                res.status(201).json(project)
+                const projectWithBoolean = {
+                    ...project,
+                    project_completed: Boolean(project.project_completed)
+                }
+                res.status(201).json(projectWithBoolean)
             })
             .catch(err => {
                 res.status(500).json({

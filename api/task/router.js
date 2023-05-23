@@ -6,9 +6,14 @@ const router = express.Router()
 
 router.get('/', (req, res) => {
     Tasks.find()
-        .then(task => {
-            if (task) {
-                res.status(200).json(task)
+        .then(tasks => {
+            if (tasks) {
+                const taskWithBoolean = tasks.map((task) => {
+                    return {
+                        ...task, task_completed: Boolean(task.task_completed)
+                    }
+                })
+                res.status(200).json(taskWithBoolean)
             } else {
                 return []
             }
@@ -33,7 +38,11 @@ router.post('/', (req, res) => {
     } else {
         Tasks.postTask({ task_description, task_notes, task_completed, project_id })
             .then(task => {
-                res.status(201).json(task)
+                const taskWithBoolean = {
+                    ...task,
+                    task_completed: Boolean(task.task_completed)
+                }
+                res.status(201).json(taskWithBoolean)
             })
             .catch(err => {
                 res.status(500).json({
